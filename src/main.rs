@@ -1,4 +1,5 @@
 use std::env;
+use std::io;
 
 // Returns the command line arguments
 // not including the filename argument.
@@ -7,18 +8,46 @@ fn get_args() -> Vec<String> {
     env::args().skip(1).collect()
 }
 
+fn print_options(options: &Vec<String>) {
+    println!("Please choose one of the following:");
+
+    let mut i = 1;
+    for opt in options.iter() {
+        println!("{}. {}", i, opt);
+        i += 1;
+    }
+    println!();
+}
+
+// Returns the selected number
+// or -1 if the input was invalid or unable to be parsed
+fn select_option() -> i32 {
+    let mut input: String = String::new();
+    match io::stdin().read_line(&mut input) {
+        Ok(n) => {
+            // read_line includes the newline in the new string
+            // so we remove it with trim_right
+            input.trim_right().parse().unwrap_or(-1)
+        }
+        Err(error) => -1
+    }
+}
+
 fn main() {
     let options = get_args();
 
     if options.len() > 0 {
-        println!("Please choose one of the following:");
+        print_options(&options);
+        let option_num = select_option();
+        let index = (option_num - 1) as usize;
 
-        let mut i = 1;
-        for opt in options.iter() {
-            println!("{}. {}", i, opt);
-            i += 1;
+        // Check if the selection is in the bounds
+        if index >= 0 && index < options.len() {
+            println!("You selected: {}", options[index]);
+        }
+        else {
+            println!("Invalid selection. {}", option_num);
         }
     }
-
 }
 
