@@ -24,12 +24,12 @@ fn print_options(options: &Vec<String>) {
 fn select_option() -> i32 {
     let mut input: String = String::new();
     match io::stdin().read_line(&mut input) {
-        Ok(n) => {
+        Ok(_) => {
             // read_line includes the newline in the new string
-            // so we remove it with trim_right
-            input.trim_right().parse().unwrap_or(-1)
+            // so we remove it with trim_end
+            input.trim_end().parse().unwrap_or(-1)
         }
-        Err(error) => -1
+        Err(_) => -1
     }
 }
 
@@ -42,7 +42,7 @@ fn main() {
         let index = (option_num - 1) as usize;
 
         // Check if the selection is in the bounds
-        if index >= 0 && index < options.len() {
+        if index < options.len() {
             println!("You selected: {}", options[index]);
         }
         else {
