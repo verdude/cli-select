@@ -35,15 +35,17 @@ fn find(dir: &Path, cb: &dyn Fn(&DirEntry) -> bool) -> io::Result<Vec<String>> {
     Ok(nlist)
 }
 
-fn print_options(options: &Vec<String>) {
-    println!("Please choose one of the following:");
-
+fn print_options(options: &Vec<String>, terse: bool) {
     let mut i = 1;
     for opt in options.iter() {
-        println!("{}. {}", i, opt);
-        i += 1;
+        if terse {
+            println!("{}", opt);
+        }
+        else {
+            println!("{}. {}", i, opt);
+            i += 1;
+        }
     }
-    println!();
 }
 
 // Returns the selected number
@@ -81,17 +83,8 @@ fn main() {
     };
 
     if options.len() > 0 {
-        print_options(&options);
-        let option_num = select_option();
-        let index = (option_num - 1) as usize;
-
-        // Check if the selection is in the bounds
-        if index < options.len() {
-            println!("You selected: {}", options[index]);
-        }
-        else {
-            println!("Invalid selection. {}", option_num);
-        }
+        print_options(&options, true);
+        std::process::exit(0);
     }
 }
 
